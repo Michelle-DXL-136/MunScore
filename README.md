@@ -9,5 +9,5 @@
 ```
 conda create -n mun-score python=3.8
 conda activate mun-score
-conda install flask flask-sqlalchemy flask-socketio flask-apscheduler flask-cors flask-login
+conda install flask flask-sqlalchemy flask-socketio flask-restful flask-apscheduler flask-login flask-caching flask-cors
 ```
