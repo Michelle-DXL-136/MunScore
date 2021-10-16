@@ -31,6 +31,14 @@ class Entity(db.Model):
     def __repr__(self):
         type_name = 'Contestant' if self.is_contestant else ('Party' if self.is_party else 'Global')
         return f'<{type_name} Entity {self.id}: {self.name}>'
+    
+    @classmethod
+    def get_party_id(cls, party_name):
+        party = cls.query.filter_by(name=party_name, is_party=True).first()
+        if party is None:
+            return -1
+        else:
+            return party.id
 
 
 class Score(db.Model):
@@ -47,16 +55,16 @@ class Score(db.Model):
         return f'<Score {self.id}>'
 
 
-class Update(db.Model):
+class History(db.Model):
 
-    __tablename__ = 'updates'
+    __tablename__ = 'histories'
 
     id = db.Column(db.Integer, primary_key=True)
     score_id = db.Column(db.ForeignKey('scores.id'))
-    score = db.relationship('Score', backref=db.backref('updates'))
+    score = db.relationship('Score', backref=db.backref('histories'))
     change = db.Column(db.Integer, default=0, nullable=False)
     created = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
     is_automatic = db.Column(db.Boolean, default=False, nullable=False)
 
     def __repr__(self):
-        return f'<Update {self.id}>'
+        return f'<History {self.id}>'
