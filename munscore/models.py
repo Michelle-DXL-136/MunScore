@@ -26,7 +26,7 @@ class Entity(db.Model):
     contest_id = db.Column(db.ForeignKey('contests.id'))
     contest = db.relationship('Contest', backref=db.backref('contest', uselist=False))
     party_id = db.Column(db.ForeignKey('entities.id'), nullable=True)
-    party = db.relationship('Entity', backref=db.backref('party', uselist=False))
+    party = db.relationship('Entity')
 
     def __repr__(self):
         type_name = 'Contestant' if self.is_contestant else ('Party' if self.is_party else 'Global')
@@ -62,9 +62,19 @@ class History(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     score_id = db.Column(db.ForeignKey('scores.id'))
     score = db.relationship('Score', backref=db.backref('histories'))
-    change = db.Column(db.Integer, default=0, nullable=False)
-    created = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
+    val = db.Column(db.Integer, nullable=False)
     is_automatic = db.Column(db.Boolean, default=False, nullable=False)
+    created = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
 
     def __repr__(self):
         return f'<History {self.id}>'
+
+    @classmethod
+    def record(cls, score, is_automatic=False):
+        '''Record a history entry for a given score.'''
+        if score.id is None:
+            # Commit first if score object is not already committed
+            db.session.commit()
+        history = cls(score_id=score.id, val=score.val, is_automatic=is_automatic)
+        db.session.add(history)
+        db.session.commit()
