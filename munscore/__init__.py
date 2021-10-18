@@ -51,7 +51,7 @@ def create_app():
             contest_entity = Entity.query.filter_by(is_global=True, contest=contest).first()
         score = Score.query.filter_by(name=SCORE_NAME['global'], entity=contest_entity).first()
         if score is None:
-            score = Score(name=SCORE_NAME['global'], val=DEFAULT_SCORE['global'], entity=contest_entity)
+            score = Score(name=SCORE_NAME['global'], value=DEFAULT_SCORE['global'], entity=contest_entity)
             db.session.add(score)
             db.session.flush()
             History.record(score, is_automatic=True)
@@ -66,7 +66,7 @@ def create_app():
             # We assume there is only one score associated to each party
             score = Score.query.filter_by(name=SCORE_NAME['party'], entity=party).first()
             if score is None:
-                score = Score(name=SCORE_NAME['party'], val=DEFAULT_SCORE['party'], entity=party)
+                score = Score(name=SCORE_NAME['party'], value=DEFAULT_SCORE['party'], entity=party)
                 db.session.add(score)
                 db.session.flush()
                 History.record(score, is_automatic=True)

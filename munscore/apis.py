@@ -4,12 +4,19 @@ from functools import wraps
 from flask import Blueprint, Response, request, send_from_directory, render_template, jsonify, redirect, url_for, make_response
 
 from munscore import db
-from munscore.models import Contest, Entity, Score, History
-from munscore.utils import get_party
+from munscore.models import Entity, Score, History
+from munscore.utils import get_party, get_all_scores, api_response
 from munscore.site_config import CONTEST_ID, SCORE_NAME, DEFAULT_SCORE
 
 
 api = Blueprint('api', __name__, url_prefix='/api')
+
+
+@api.route('/contestant/<contestant_id>', methods=['GET', 'POST'])
+def get_contestant(contestant_id):
+    contestant = Entity.query.get(contestant_id)
+
+    return api_response(contestant.serialize())
 
 
 @api.route('/contestant/add', methods=['POST'])
@@ -21,13 +28,13 @@ def add_contestant():
 
     # Insert contestant and score entry
     contestant = Entity(name=name, is_contestant=True, party=party, contest_id=CONTEST_ID)
-    score = Score(name=SCORE_NAME['contestant'], val=DEFAULT_SCORE['contestant'], entity=contestant)
+    score = Score(name=SCORE_NAME['contestant'], value=DEFAULT_SCORE['contestant'], entity=contestant)
     db.session.add(contestant)
     db.session.add(score)
     History.record(score, is_automatic=True)
     db.session.commit()
 
-    return jsonify({'code': 0, 'message': 'Success', 'data': contestant.serialize()})
+    return api_response(contestant.serialize())
 
 
 @api.route('/contestant/remove', methods=['POST'])
@@ -38,34 +45,41 @@ def remove_contestant():
     db.session.delete(contestant)
     db.session.commit()
 
-    return jsonify({'code': 0, 'message': 'Success'})
+    return api_response()
 
 
 @api.route('/scores', methods=['GET', 'POST'])
-def get_all_scores():
-    Score.query.all()
-    response = {
-        'congress': {'name': congress_score_name, 'val': congress_score},
-        'party': {},
-        'contestant': {}
-    }
-    return jsonify(response)
+def get_scores():
+    return api_response(get_all_scores())
 
 
 @api.route('/score/<score_id>', methods=['GET', 'POST'])
 def get_score(score_id):
-    pass
+    score = Score.query.get(score_id)
+    return api_response(score.serialize())
 
 
 @api.route('/score/update', methods=['POST'])
 def update_score():
-    form_data = request.json
-    score_id = form_data.get('score_id')
-    change = form_data.get('change')
+    req_data = request.json or request.form
+    score_id = req_data.get('score_id')
+    change = req_data.get('change')
+
+    score = Score.query.get(score_id)
+    score.value += int(change)
+    History.record(score)
+
+    return api_response(score.serialize())
 
 
 @api.route('/score/set', methods=['POST'])
 def set_score():
-    form_data = request.json
-    score_id = form_data.get('score_id')
-    change = form_data.get('change')
+    req_data = request.json or request.form
+    score_id = req_data.get('score_id')
+    value = req_data.get('value')
+
+    score = Score.query.get(score_id)
+    score.value = int(value)
+    History.record(score)
+
+    return api_response(score.serialize())

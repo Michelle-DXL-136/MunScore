@@ -57,7 +57,7 @@ class Score(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80), nullable=False)
-    val = db.Column(db.Integer, default=0, nullable=False)
+    value = db.Column(db.Integer, default=0, nullable=False)
     entity_id = db.Column(db.ForeignKey('entities.id'))
     entity = db.relationship('Entity', uselist=False, backref=db.backref('scores'))
 
@@ -66,7 +66,7 @@ class Score(db.Model):
     
     def serialize(self):
         '''Serialize the score into JSON-like format.'''
-        return {'id': self.id, 'name': self.name, 'value': self.val}
+        return {'id': self.id, 'name': self.name, 'value': self.value}
 
 
 class History(db.Model):
@@ -76,7 +76,7 @@ class History(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     score_id = db.Column(db.ForeignKey('scores.id'))
     score = db.relationship('Score', uselist=False, backref=db.backref('histories'))
-    val = db.Column(db.Integer, default=0, nullable=False)
+    value = db.Column(db.Integer, default=0, nullable=False)
     is_automatic = db.Column(db.Boolean, default=False, nullable=False)
     created = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
 
@@ -89,6 +89,6 @@ class History(db.Model):
         # if score.id is None:
         #     # Flush first to get object ID
         #     db.session.flush()
-        history = cls(score=score, val=score.val, is_automatic=is_automatic)
+        history = cls(score=score, value=score.value, is_automatic=is_automatic)
         db.session.add(history)
         db.session.commit()
