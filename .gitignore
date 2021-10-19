@@ -1,2 +1,30 @@
-.DS_Store
+# Virtual Environments
+venv/
+env/
+
+# Python Files
 *.pyc
+__pycache__/
+
+# Development Files
+.vscode
+
+# Deployment Files
+*.ini
+*.sock
+
+# Local Flask Instance Directory
+instance/
+*.db
+*.sqlite
+
+# Misc
+.DS_Store
+.pytest_cache/
+.coverage
+htmlcov/
+
+dist/
+build/
+*.egg-info/
+
