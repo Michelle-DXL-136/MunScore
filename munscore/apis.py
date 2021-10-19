@@ -53,7 +53,7 @@ def get_scores():
     return api_response(get_all_scores())
 
 
-@api.route('/score/<score_id>', methods=['GET', 'POST'])
+@api.route('/score/<int:score_id>', methods=['GET', 'POST'])
 def get_score(score_id):
     score = Score.query.get(score_id)
     return api_response(score.serialize())
@@ -85,6 +85,21 @@ def set_score():
     broadcast_all_data()
 
     return api_response(score.serialize())
+
+
+@api.route('/scores/history', methods=['GET', 'POST'])
+def get_histories():
+    scores = Score.query.join(Score.entity, aliased=True).filter_by(contest_id=CONTEST_ID).all()
+    data = [score.serialize_history() for score in scores]
+
+    return api_response(data)
+
+
+@api.route('/score/<int:score_id>/history', methods=['GET', 'POST'])
+def get_history(score_id):
+    score = Score.query.get(score_id)
+
+    return api_response(score.serialize_history())
 
 
 # SocketIO Functions
