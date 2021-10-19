@@ -1,9 +1,7 @@
-import sys
-from functools import wraps
+from flask import Blueprint, request
+from flask_socketio import emit
 
-from flask import Blueprint, Response, request, send_from_directory, render_template, jsonify, redirect, url_for, make_response
-
-from munscore import db
+from munscore import db, socketio, cache
 from munscore.models import Entity, Score, History
 from munscore.utils import get_party, get_all_scores, api_response
 from munscore.site_config import CONTEST_ID, SCORE_NAME, DEFAULT_SCORE
@@ -33,6 +31,7 @@ def add_contestant():
     db.session.add(score)
     History.record(score, is_automatic=True)
     db.session.commit()
+    broadcast_all_data()
 
     return api_response(contestant.serialize())
 
@@ -44,6 +43,7 @@ def remove_contestant():
     contestant = Entity.query.get(contestant_id)
     db.session.delete(contestant)
     db.session.commit()
+    broadcast_all_data()
 
     return api_response()
 
@@ -68,6 +68,7 @@ def update_score():
     score = Score.query.get(score_id)
     score.value += int(change)
     History.record(score)
+    broadcast_all_data()
 
     return api_response(score.serialize())
 
@@ -81,5 +82,20 @@ def set_score():
     score = Score.query.get(score_id)
     score.value = int(value)
     History.record(score)
+    broadcast_all_data()
 
     return api_response(score.serialize())
+
+
+# SocketIO Functions
+
+@socketio.on('connect')
+def on_connect():
+    data = get_all_scores()
+    emit('scores', data, json=True)
+
+
+def broadcast_all_data():
+    cache.delete('all_score')
+    data = get_all_scores()
+    socketio.emit('scores', data, json=True)

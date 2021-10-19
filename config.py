@@ -8,6 +8,7 @@ class Config:
     THREADS_PER_PAGE = 2
     CSRF_ENABLED = True
     SQLALCHEMY_DATABASE_URI = 'sqlite:///munscore.db'
+    SECRET_KEY = 'not_really_a_secret'
 
 
 class DevelopmentConfig(Config):

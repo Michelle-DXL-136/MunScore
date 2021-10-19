@@ -11,7 +11,7 @@ def get_party(party_name):
     return party
 
 
-@cache.cached(10)
+@cache.cached(15, 'all_score')
 def get_all_scores():
     contestants = Entity.query.filter_by(is_contestant=True, contest_id=CONTEST_ID)
     contestants = contestants.order_by(Entity.id).all()

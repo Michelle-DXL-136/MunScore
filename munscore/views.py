@@ -1,12 +1,12 @@
-import sys
-from functools import wraps
-
 from flask import current_app as app
-from flask import Response, request, send_from_directory, render_template, jsonify, redirect, url_for, make_response
-
-# from munscore import app#, db, login_manager
+from flask import send_from_directory, render_template, redirect, url_for
 
 
 @app.route('/')
 def index_page():
-    return 'Hi!'
+    return send_from_directory('static', 'index.html')
+
+
+@app.route('/static/<path:path>')
+def serve_static(path):
+    return send_from_directory('static', path)

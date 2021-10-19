@@ -2,6 +2,7 @@ import os
 
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+from flask_socketio import SocketIO
 from flask_caching import Cache
 
 from config import app_config
@@ -9,6 +10,7 @@ from config import app_config
 
 # Initialize outside to be importable
 db = SQLAlchemy()
+socketio = SocketIO()
 cache = Cache(config={'CACHE_TYPE': 'simple'})
 
 def create_app():
@@ -20,6 +22,7 @@ def create_app():
     app.config.from_object(app_config.get(flask_env, app_config['development']))
 
     # Initialize plugin instances
+    socketio.init_app(app)
     cache.init_app(app)
 
     # Import views and APIs
@@ -53,7 +56,6 @@ def create_app():
         if score is None:
             score = Score(name=SCORE_NAME['global'], value=DEFAULT_SCORE['global'], entity=contest_entity)
             db.session.add(score)
-            db.session.flush()
             History.record(score, is_automatic=True)
 
         # Create party entries and scores if they don't exist
@@ -62,13 +64,11 @@ def create_app():
             if party is None:
                 party = Entity(name=party_name, is_party=True, contest=contest)
                 db.session.add(party)
-                db.session.flush()
             # We assume there is only one score associated to each party
             score = Score.query.filter_by(name=SCORE_NAME['party'], entity=party).first()
             if score is None:
                 score = Score(name=SCORE_NAME['party'], value=DEFAULT_SCORE['party'], entity=party)
                 db.session.add(score)
-                db.session.flush()
                 History.record(score, is_automatic=True)
 
         db.session.commit()
