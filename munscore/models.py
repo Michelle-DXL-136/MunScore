@@ -68,6 +68,15 @@ class Score(db.Model):
         '''Serialize the score into JSON-like format.'''
         return {'id': self.id, 'name': self.name, 'value': self.value}
 
+    def serialize_history(self):
+        '''Serialize the score's histories into JSON-like format.'''
+        raw_histories = History.query.filter_by(score=self).all()
+        data = {'id': self.id, 'name': self.name}
+        data['values'] = [history.value for history in raw_histories]
+        data['timestamps'] = [int(history.created.timestamp()) for history in raw_histories]
+        data['are_automatic'] = [history.is_automatic for history in raw_histories]
+        return data
+
 
 class History(db.Model):
 
@@ -78,7 +87,7 @@ class History(db.Model):
     score = db.relationship('Score', uselist=False, backref=db.backref('histories'))
     value = db.Column(db.Integer, default=0, nullable=False)
     is_automatic = db.Column(db.Boolean, default=False, nullable=False)
-    created = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
+    created = db.Column(db.DateTime, default=datetime.now, nullable=False)
 
     def __repr__(self):
         return f'<History {self.id}>'
