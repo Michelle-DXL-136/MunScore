@@ -19,6 +19,7 @@ class DevelopmentConfig(Config):
     DEBUG = True
     SQLALCHEMY_ECHO = True
     SQLALCHEMY_TRACK_MODIFICATIONS = True
+    SCHEDULER_API_ENABLED = True
 
 
 class ProductionConfig(Config):
@@ -27,6 +28,7 @@ class ProductionConfig(Config):
     ENV = 'production'
     DEBUG = False
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+    SCHEDULER_API_ENABLED = False
 
 
 app_config = {

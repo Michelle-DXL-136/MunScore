@@ -2,24 +2,33 @@ from flask import jsonify
 
 from munscore import cache
 from munscore.models import Entity
-from munscore.site_config import CONTEST_ID
 
 
-@cache.memoize(300)
+@cache.memoize(20)
+def get_venue(venue_name):
+    venue = Entity.query.filter_by(name=venue_name, is_venue=True).first()
+    return venue
+
+
+@cache.memoize(20)
 def get_party(party_name):
-    party = Entity.query.filter_by(name=party_name, is_party=True, contest_id=CONTEST_ID).first()
+    party = Entity.query.filter_by(name=party_name, is_party=True).first()
     return party
 
 
-@cache.cached(15, 'all_score')
+@cache.cached(20, 'all_score')
 def get_all_scores():
-    contestants = Entity.query.filter_by(is_contestant=True, contest_id=CONTEST_ID)
-    contestants = contestants.order_by(Entity.id).all()
-    global_ = Entity.query.filter_by(is_global=True, contest_id=CONTEST_ID).first()
-    data = {
-        'contestants': [contestant.serialize() for contestant in contestants],
-        'global': global_.serialize()
-    }
+    venues = Entity.query.filter_by(is_venue=True).order_by(Entity.id).all()
+    parties = Entity.query.filter_by(is_party=True).order_by(Entity.id).all()
+    data = {}
+
+    data['venues'] = [venue.serialize() for venue in venues]
+    data['parties'] = [party.serialize() for party in parties]
+    data['contestants'] = []
+    for venue in venues:
+        contestants = Entity.query.filter_by(is_contestant=True, venue=venue)
+        contestants = contestants.order_by(Entity.id).all()
+        data['contestants'].append([contestant.serialize() for contestant in contestants])
     return data
 
 

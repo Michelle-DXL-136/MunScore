@@ -3,6 +3,7 @@ import os
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_socketio import SocketIO
+from flask_apscheduler import APScheduler
 from flask_caching import Cache
 
 from config import app_config
@@ -12,6 +13,7 @@ from config import app_config
 db = SQLAlchemy()
 socketio = SocketIO()
 cache = Cache(config={'CACHE_TYPE': 'simple'})
+scheduler = APScheduler()
 
 def create_app():
     # Initialize app and related instances
@@ -23,6 +25,7 @@ def create_app():
 
     # Initialize plugin instances
     socketio.init_app(app)
+    scheduler.init_app(app)
     cache.init_app(app)
 
     # Import views and APIs
@@ -38,33 +41,31 @@ def create_app():
 
     @app.before_first_request
     def initialize_db_entries():
-        '''Initialize database entries for default settings.'''
-        from munscore.models import Contest, Entity, Score, History
-        from munscore.site_config import CONTEST_ID, CONTEST_NAME, PARTIES, SCORE_NAME, DEFAULT_SCORE
+        '''
+        Initialize database entries for default settings.
+        Note we assume each entity only has one score.
+        '''
+        from munscore.models import Entity, Score, History
+        from munscore.site_config import VENUES, PARTIES, SCORE_NAME, DEFAULT_SCORE
 
-        # Create default contest and score if it doesn't exist
-        contest = Contest.query.get(CONTEST_ID)
-        if contest is None:
-            contest = Contest(id=CONTEST_ID, name=CONTEST_NAME)
-            contest_entity = Entity(name='Global', is_global=True, contest=contest)
-            db.session.add(contest)
-            db.session.add(contest_entity)
-        else:
-            # We assume if contest exists, its corresponding entity also exists
-            contest_entity = Entity.query.filter_by(is_global=True, contest=contest).first()
-        score = Score.query.filter_by(name=SCORE_NAME['global'], entity=contest_entity).first()
-        if score is None:
-            score = Score(name=SCORE_NAME['global'], value=DEFAULT_SCORE['global'], entity=contest_entity)
-            db.session.add(score)
-            History.record(score, is_automatic=True)
+        # Initialize venue (and score) entries if they don't exist
+        for venue_name in VENUES:
+            venue = Entity.query.filter_by(name=venue_name, is_venue=True).first()
+            if venue is None:
+                venue = Entity(name=venue_name, is_venue=True)
+                db.session.add(venue)
+            score = Score.query.filter_by(name=SCORE_NAME['venue'], entity=venue).first()
+            if score is None:
+                score = Score(name=SCORE_NAME['venue'], value=DEFAULT_SCORE['venue'], entity=venue)
+                db.session.add(score)
+                History.record(score, is_automatic=True)
 
-        # Create party entries and scores if they don't exist
+        # Initialize party (and score) entries if they don't exist
         for party_name in PARTIES:
             party = Entity.query.filter_by(name=party_name, is_party=True).first()
             if party is None:
-                party = Entity(name=party_name, is_party=True, contest=contest)
+                party = Entity(name=party_name, is_party=True)
                 db.session.add(party)
-            # We assume there is only one score associated to each party
             score = Score.query.filter_by(name=SCORE_NAME['party'], entity=party).first()
             if score is None:
                 score = Score(name=SCORE_NAME['party'], value=DEFAULT_SCORE['party'], entity=party)

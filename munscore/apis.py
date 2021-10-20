@@ -1,10 +1,11 @@
+# from flask import current_app as app
 from flask import Blueprint, request
 from flask_socketio import emit
 
-from munscore import db, socketio, cache
+from munscore import db, socketio, scheduler, cache
 from munscore.models import Entity, Score, History
-from munscore.utils import get_party, get_all_scores, api_response
-from munscore.site_config import CONTEST_ID, SCORE_NAME, DEFAULT_SCORE
+from munscore.utils import get_venue, get_party, get_all_scores, api_response
+from munscore.site_config import SCORE_NAME, DEFAULT_SCORE, SCORE_DILATION
 
 
 api = Blueprint('api', __name__, url_prefix='/api')
@@ -21,11 +22,13 @@ def get_contestant(contestant_id):
 def add_contestant():
     req_data = request.json or request.form
     name = req_data.get('name')
+    venue_name = req_data.get('venue')
     party_name = req_data.get('party')
+    venue = get_venue(venue_name)
     party = get_party(party_name)
 
     # Insert contestant and score entry
-    contestant = Entity(name=name, is_contestant=True, party=party, contest_id=CONTEST_ID)
+    contestant = Entity(name=name, is_contestant=True, venue=venue, party=party)
     score = Score(name=SCORE_NAME['contestant'], value=DEFAULT_SCORE['contestant'], entity=contestant)
     db.session.add(contestant)
     db.session.add(score)
@@ -89,7 +92,7 @@ def set_score():
 
 @api.route('/scores/history', methods=['GET', 'POST'])
 def get_histories():
-    scores = Score.query.join(Score.entity, aliased=True).filter_by(contest_id=CONTEST_ID).all()
+    scores = Score.query.join(Score.entity, aliased=True).all()
     data = [score.serialize_history() for score in scores]
 
     return api_response(data)
@@ -114,3 +117,23 @@ def broadcast_all_data():
     cache.delete('all_score')
     data = get_all_scores()
     socketio.emit('scores', data, json=True)
+
+
+# Scheduled tasks
+@scheduler.task('interval', id='interval_update_score', minutes=60, misfire_grace_time=120)
+def interval_update_score():
+    print('Automatically updating score')
+    with scheduler.app.app_context():
+        scores = Score.query.join(Entity).all()
+        for score in scores:
+            if score.entity.is_venue:
+                score.value += SCORE_DILATION
+            else:
+                score.value -= SCORE_DILATION
+            History.record(score, commit=False)
+        db.session.commit()
+        broadcast_all_data()
+
+
+scheduler.start()
+# scheduler.add_job(**args)
