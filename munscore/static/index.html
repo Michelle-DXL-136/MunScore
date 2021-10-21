@@ -1,12 +1,14 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-cmn-Hans">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.min.css">
+    <title>模拟联合国数据模型</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
 </head>
+
 <body>
     <div class="container">
         <!-- header -->
@@ -181,73 +183,11 @@
             <input type="submit" class="btn" value="提交修改">
         </form>
         <hr>
-    <script>
-        var k1=0;
-        Aform.addEventListener("submit",(ev) => {
-            k1++;
-            ev.preventDefault();
-            var name1=document.getElementById('namea').value;
-            var party1=document.getElementById('partya').value;
-            console.log(party1);
-            var data={};
-            data['name']=name1;
-            data['party']='Party '+party1;
-            console.log(data);
-            fetch('/api/contestant/add', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify(data),
-            })
-            .then(response => response.json())
-            .then(json => {
-                console.log('Success:',json);
-                document.getElementById('mytableA').innerHTML += '<tr><td>'+k1+'号'+'</td><td>'+json.data.name+'</td><td>70</td><td>'+json.data.party+'</td></tr>';
-            ;});
-        });
-        var k2=0;
-        Bform.addEventListener("submit",(ev) => {
-            k2++;
-            ev.preventDefault();
-            var name1=document.getElementById('nameb').value;
-            var party1=document.getElementById('partyb').value;
-            console.log(party1);
-            var data={};
-            data['name']=name1;
-            data['party']='Party '+party1;
-            console.log(data);
-            fetch('/api/contestant/add', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify(data),
-            })
-            .then(response => response.json())
-            .then(json => {
-                console.log('Success:',json);
-                document.getElementById('mytableB').innerHTML += '<tr><td>'+k2+'号'+'</td><td>'+json.data.name+'</td><td>70</td><td>'+json.data.party+'</td></tr>';
-            ;});
-        });
-        var k3=0;
-        Cform.addEventListener("submit",(ev) => {
-            k3++;
-            ev.preventDefault();
-            var name1=document.getElementById('namec').value;
-            var party1=document.getElementById('partyc').value;
-            console.log(party1);
-            var data={};
-            data['name']=name1;
-            data['party']='Party '+party1;
-            console.log(data);
-            fetch('/api/contestant/add', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify(data),
-            })
-            .then(response => response.json())
-            .then(json => {
-                console.log('Success:',json);
-                document.getElementById('mytableC').innerHTML += '<tr><td>'+k3+'号'+'</td><td>'+json.data.name+'</td><td>70</td><td>'+json.data.party+'</td></tr>';
-            ;});
-        });
-    </script>
+    </div>
+    
+    <script src="/static/main.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+
 </body>
+
 </html>
