@@ -1,8 +1,23 @@
 const socket = io.connect('/');
 socket.on('scores', formatScores);
+let pageInitialized = false;
+
+function initializePage(scores) {
+    // 填充党派选择选项
+    let parties = scores.parties.map(p => p.name);
+    let partiesText = parties.map(p => `<option>${p}</option>`).join('');
+    document.querySelectorAll('.party-select').forEach(el => {
+        el.innerHTML = partiesText;
+    })
+}
 
 
 function formatScores(scores) {
+    if (!pageInitialized) {
+        initializePage(scores);
+        pageInitialized = true;
+    }
+    
 	console.log(scores);
 	let stringified = JSON.stringify(scores, null, 4);
 	stringified = _syntaxHighlight(stringified);
@@ -11,67 +26,71 @@ function formatScores(scores) {
 }
 
 
-function _syntaxHighlight(json) {
-    if (typeof json != 'string') {
-         json = JSON.stringify(json, undefined, 2);
-    }
-    json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-    return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
-        var cls = 'number';
-        if (/^"/.test(match)) {
-            if (/:$/.test(match)) {
-                cls = 'key';
-            } else {
-                cls = 'string';
-            }
-        } else if (/true|false/.test(match)) {
-            cls = 'boolean';
-        } else if (/null/.test(match)) {
-            cls = 'null';
-        }
-        return '<span class="' + cls + '">' + match + '</span>';
-    });
-}
+var k1=0;
+Aform.addEventListener("submit",(ev) => {
+    k1++;
+    ev.preventDefault();
+    var name1=document.getElementById('namea').value;
+    var party1=document.getElementById('partya').value;
+    console.log(party1);
+    var data={};
+    data['name']=name1;
+    data['party']='Party '+party1;
+    console.log(data);
+    fetch('/api/contestant/add', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(data),
+    })
+    .then(response => response.json())
+    .then(json => {
+        console.log('Success:',json);
+        document.getElementById('mytableA').innerHTML += '<tr><td>'+k1+'号'+'</td><td>'+json.data.name+'</td><td>70</td><td>'+json.data.party+'</td></tr>';
+    ;});
+});
 
+var k2=0;
+Bform.addEventListener("submit",(ev) => {
+    k2++;
+    ev.preventDefault();
+    var name1=document.getElementById('nameb').value;
+    var party1=document.getElementById('partyb').value;
+    console.log(party1);
+    var data={};
+    data['name']=name1;
+    data['party']='Party '+party1;
+    console.log(data);
+    fetch('/api/contestant/add', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(data),
+    })
+    .then(response => response.json())
+    .then(json => {
+        console.log('Success:',json);
+        document.getElementById('mytableB').innerHTML += '<tr><td>'+k2+'号'+'</td><td>'+json.data.name+'</td><td>70</td><td>'+json.data.party+'</td></tr>';
+    ;});
+});
 
-
-// const data = { 'name': 'George', 'party': 'Party A' };
-
-// fetch('http://localhost:5000/api/contestant/add', {
-//     method: 'POST',
-//     headers: {'Content-Type': 'application/json'},
-//     body: JSON.stringify(data),
-// })
-// .then(response => response.json())
-// .then(json => {
-//     console.log('Success:', json);
-//     document.getElementById('title').innerHTML = json.data.name;
-// });
-
-
-
-
-
-
-
-// document.getElementById('fucking-form').onsubmit = (e) => {
-//     e.preventDefault();
-
-//     const formData  = new FormData();
-//     const fileInput = document.getElementById('cute-image-input');
-//     formData.append('cute-image', fileInput.files[0]);
-
-//     fetch('/add', {
-//         method: 'POST',
-//         body: formData
-//     })
-//     .then(r => r.json())
-//     .then(data => {
-//         console.log(data);
-//         // const imgElement = document.getElementById('result-image');
-//         // imgElement.src = data['image_url'];
-//         document.getElementById('image-container').innerHTML += `
-//             <img src="${data['image_url']}" style="width: 600px;">
-//         `;
-//     });
-// }
+var k3=0;
+Cform.addEventListener("submit",(ev) => {
+    k3++;
+    ev.preventDefault();
+    var name1=document.getElementById('namec').value;
+    var party1=document.getElementById('partyc').value;
+    console.log(party1);
+    var data={};
+    data['name']=name1;
+    data['party']='Party '+party1;
+    console.log(data);
+    fetch('/api/contestant/add', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(data),
+    })
+    .then(response => response.json())
+    .then(json => {
+        console.log('Success:',json);
+        document.getElementById('mytableC').innerHTML += '<tr><td>'+k3+'号'+'</td><td>'+json.data.name+'</td><td>70</td><td>'+json.data.party+'</td></tr>';
+    ;});
+});
