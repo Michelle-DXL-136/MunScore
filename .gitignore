@@ -24,6 +24,9 @@ instance/
 .coverage
 htmlcov/
 
+log/
+*.log
+
 dist/
 build/
 *.egg-info/
