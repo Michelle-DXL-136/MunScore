@@ -2,6 +2,7 @@ const socket = io.connect('/');
 socket.on('scores', formatScores);
 let pageInitialized = false;
 
+
 function initializePage(scores) {
     // 填充党派选择选项
     let parties = scores.parties.map(p => p.name);
@@ -18,11 +19,8 @@ function formatScores(scores) {
         pageInitialized = true;
     }
     
+    // 将数据填充进 HTML 页面
 	console.log(scores);
-	let stringified = JSON.stringify(scores, null, 4);
-	stringified = _syntaxHighlight(stringified);
-
-	document.getElementById('json-output').innerHTML = stringified;
 }
 
 
