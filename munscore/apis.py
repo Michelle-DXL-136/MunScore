@@ -134,6 +134,22 @@ def get_history(score_id):
     return api_response(score.serialize_history())
 
 
+@api.route('/contest/start', methods=['POST'])
+def start_contest():
+    prev_state = scheduler.state
+    scheduler.resume()
+    broadcast_contest_state(prev_state)
+    return api_response(scheduler.state)
+
+
+@api.route('/contest/stop', methods=['POST'])
+def stop_contest():
+    prev_state = scheduler.state
+    scheduler.pause()
+    broadcast_contest_state(prev_state)
+    return api_response(scheduler.state)
+
+
 # SocketIO Functions
 
 @socketio.on('connect')
@@ -146,6 +162,16 @@ def broadcast_all_data():
     cache.delete('all_score')
     data = get_all_scores()
     socketio.emit('scores', data, json=True)
+
+
+def broadcast_contest_state(prev_state=None):
+    current_state = scheduler.state
+    if prev_state == current_state:
+        return
+    else:
+        state = {0: 'Stopped', 1: 'Running', 2: 'Paused'}[current_state]
+        data = {'code': current_state, 'state': state}
+        socketio.emit('contest', data, json=True)
 
 
 # Scheduled tasks
@@ -164,5 +190,4 @@ def interval_update_score():
         broadcast_all_data()
 
 
-scheduler.start()
-# scheduler.add_job(**args)
+scheduler.start(paused=True)
