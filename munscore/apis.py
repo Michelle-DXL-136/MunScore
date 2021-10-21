@@ -14,6 +14,8 @@ api = Blueprint('api', __name__, url_prefix='/api')
 @api.route('/contestant/<contestant_id>', methods=['GET', 'POST'])
 def get_contestant(contestant_id):
     contestant = Entity.query.get(contestant_id)
+    if contestant is None:
+        return api_response(code=404, message='Contestant not found')
 
     return api_response(contestant.serialize())
 
@@ -24,8 +26,15 @@ def add_contestant():
     name = req_data.get('name')
     venue_name = req_data.get('venue')
     party_name = req_data.get('party')
-    venue = get_venue(venue_name)
-    party = get_party(party_name)
+    venue = get_venue(venue_name) if venue_name is not None else None
+    party = get_party(party_name) if party_name is not None else None
+
+    if venue is None:
+        return api_response(code=404, message='Venue not found')
+    if party is None:
+        return api_response(code=404, message='Party not found')
+    if not name:
+        return api_response(code=422, message='Name of contestant cannot be empty')
 
     # Insert contestant and score entry
     contestant = Entity(name=name, is_contestant=True, venue=venue, party=party)
@@ -44,6 +53,9 @@ def remove_contestant():
     req_data = request.json or request.form
     contestant_id = req_data.get('id')
     contestant = Entity.query.get(contestant_id)
+    if contestant is None:
+        return api_response(code=404, message='Contestant not found')
+
     db.session.delete(contestant)
     db.session.commit()
     broadcast_all_data()
@@ -59,6 +71,9 @@ def get_scores():
 @api.route('/score/<int:score_id>', methods=['GET', 'POST'])
 def get_score(score_id):
     score = Score.query.get(score_id)
+    if score is None:
+        return api_response(code=404, message='Score not found')
+
     return api_response(score.serialize())
 
 
@@ -67,9 +82,15 @@ def update_score():
     req_data = request.json or request.form
     score_id = req_data.get('score_id')
     change = req_data.get('change')
-
     score = Score.query.get(score_id)
-    score.value += int(change)
+    if score is None:
+        return api_response(code=404, message='Score not found')
+    try:
+        change = int(change)
+    except ValueError:
+        return api_response(code=422, message='Invalid value for score change')
+
+    score.value += change
     History.record(score)
     broadcast_all_data()
 
@@ -81,9 +102,15 @@ def set_score():
     req_data = request.json or request.form
     score_id = req_data.get('score_id')
     value = req_data.get('value')
-
     score = Score.query.get(score_id)
-    score.value = int(value)
+    if score is None:
+        return api_response(code=404, message='Score not found')
+    try:
+        value = int(value)
+    except ValueError:
+        return api_response(code=422, message='Invalid score value')
+
+    score.value = value
     History.record(score)
     broadcast_all_data()
 
@@ -101,6 +128,8 @@ def get_histories():
 @api.route('/score/<int:score_id>/history', methods=['GET', 'POST'])
 def get_history(score_id):
     score = Score.query.get(score_id)
+    if score is None:
+        return api_response(code=404, message='Score not found')
 
     return api_response(score.serialize_history())
 
