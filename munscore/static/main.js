@@ -20,7 +20,47 @@ function formatScores(scores) {
     }
     
     // 将数据填充进 HTML 页面
-	console.log(scores);
+    
+    // var formdata = new FormData();
+    // var theScore=document.querySelector('#score');
+    // var scoreId=theScore.dataset.score_id;
+    // console.log(scoreId);
+    // formdata.append("score_id", scoreId);
+    // formdata.append("value", "80");
+
+    // var requestOptions = {
+    //   method: 'POST',
+    //   body: formdata,
+    //   redirect: 'follow'
+    // };
+
+    // fetch("/api/score/set", requestOptions)
+    // .then(response => response.json())
+    // .then(json => {
+    //     console.log('Success!!!',json);
+    //     document.getElementById('score').innerHTML = json.formdata.value;
+    // ;});
+}
+
+function myFunction(obj)
+{
+    var scoreId=obj.id;
+    console.log(scoreId);
+    var formdata = new FormData();
+    formdata.append("score_id", scoreId);
+    formdata.append("value", "88");
+
+    var requestOptions = {
+      method: 'POST',
+      body: formdata,
+      redirect: 'follow'
+    }
+    fetch("/api/score/set", requestOptions)
+    .then(response => response.json())
+    .then(json => {
+        console.log('Success again:',json);
+        document.getElementById(scoreId).innerHTML = json.data.value;
+    ;});
 }
 
 
@@ -31,21 +71,22 @@ Aform.addEventListener("submit",(ev) => {
     var name1=document.getElementById('namea').value;
     var party1=document.getElementById('partya').value;
     var venue1=document.getElementById('venueA').innerHTML;
-    console.log(party1);
-    var data={};
-    data['name']=name1;
-    data['party']=party1;
-    data['venue']=venue1;
+    var data=new FormData();
+    data.append("name",name1)
+    data.append("venue", venue1)
+    data.append("party",party1)
     console.log(data);
     fetch('/api/contestant/add', {
         method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify(data),
+        body: data,
+        redirect:'follow'
     })
     .then(response => response.json())
     .then(json => {
         console.log('Success:',json);
-        document.getElementById('mytableA').innerHTML += '<tr><td>'+k1+'号'+'</td><td>'+json.data.name+'</td><td>70</td><td>'+json.data.party+'</td></tr>';
+        var id=json.data.score.id;
+        console.log(id);
+        document.getElementById('mytableA').innerHTML += '<tr><td>'+k1+'号'+'</td><td>'+json.data.name+'</td><td onclick="myFunction(this)" id="'+id+'">'+json.data.score.value+'</td><td>'+json.data.party+'</td></tr>';
     ;});
 });
 
@@ -56,21 +97,22 @@ Bform.addEventListener("submit",(ev) => {
     var name1=document.getElementById('nameb').value;
     var party1=document.getElementById('partyb').value;
     var venue1=document.getElementById('venueB').innerHTML;
-    console.log(party1);
-    var data={};
-    data['name']=name1;
-    data['party']=party1;
-    data['venue']=venue1;
+    var data=new FormData();
+    data.append("name",name1)
+    data.append("venue", venue1)
+    data.append("party",party1)
     console.log(data);
     fetch('/api/contestant/add', {
         method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify(data),
+        body: data,
+        redirect:'follow'
     })
     .then(response => response.json())
     .then(json => {
         console.log('Success:',json);
-        document.getElementById('mytableB').innerHTML += '<tr><td>'+k2+'号'+'</td><td>'+json.data.name+'</td><td>70</td><td>'+json.data.party+'</td></tr>';
+        var id=json.data.score.id;
+        console.log("The id is:",id);
+        document.getElementById('mytableB').innerHTML += '<tr><td>'+k2+'号'+'</td><td>'+json.data.name+'</td><td onclick="myFunction(this)" id="'+id+'">'+json.data.score.value+'</td><td>'+json.data.party+'</td></tr>';
     ;});
 });
 
@@ -81,20 +123,21 @@ Cform.addEventListener("submit",(ev) => {
     var name1=document.getElementById('namec').value;
     var party1=document.getElementById('partyc').value;
     var venue1=document.getElementById('venueC').innerHTML;
-    console.log(party1);
-    var data={};
-    data['name']=name1;
-    data['party']=party1;
-    data['venue']=venue1;
+    var data=new FormData();
+    data.append("name",name1)
+    data.append("venue", venue1)
+    data.append("party",party1)
     console.log(data);
     fetch('/api/contestant/add', {
         method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify(data),
+        body: data,
+        redirect:'follow'
     })
     .then(response => response.json())
     .then(json => {
         console.log('Success:',json);
-        document.getElementById('mytableC').innerHTML += '<tr><td>'+k3+'号'+'</td><td>'+json.data.name+'</td><td>70</td><td>'+json.data.party+'</td></tr>';
+        var id=json.data.score.id;
+        console.log(id);
+        document.getElementById('mytableC').innerHTML += '<tr><td>'+k3+'号'+'</td><td>'+json.data.name+'</td><td onclick="myFunction(this)" id="'+id+'">'+json.data.score.value+'</td><td>'+json.data.party+'</td></tr>';
     ;});
 });
