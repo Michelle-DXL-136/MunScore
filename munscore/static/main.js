@@ -30,10 +30,12 @@ Aform.addEventListener("submit",(ev) => {
     ev.preventDefault();
     var name1=document.getElementById('namea').value;
     var party1=document.getElementById('partya').value;
+    var venue1=document.getElementById('venueA').innerHTML;
     console.log(party1);
     var data={};
     data['name']=name1;
-    data['party']='Party '+party1;
+    data['party']=party1;
+    data['venue']=venue1;
     console.log(data);
     fetch('/api/contestant/add', {
         method: 'POST',
@@ -53,10 +55,12 @@ Bform.addEventListener("submit",(ev) => {
     ev.preventDefault();
     var name1=document.getElementById('nameb').value;
     var party1=document.getElementById('partyb').value;
+    var venue1=document.getElementById('venueB').innerHTML;
     console.log(party1);
     var data={};
     data['name']=name1;
-    data['party']='Party '+party1;
+    data['party']=party1;
+    data['venue']=venue1;
     console.log(data);
     fetch('/api/contestant/add', {
         method: 'POST',
@@ -76,10 +80,12 @@ Cform.addEventListener("submit",(ev) => {
     ev.preventDefault();
     var name1=document.getElementById('namec').value;
     var party1=document.getElementById('partyc').value;
+    var venue1=document.getElementById('venueC').innerHTML;
     console.log(party1);
     var data={};
     data['name']=name1;
-    data['party']='Party '+party1;
+    data['party']=party1;
+    data['venue']=venue1;
     console.log(data);
     fetch('/api/contestant/add', {
         method: 'POST',
