@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.min.css">
 </head>
 <body>
     <div class="container">
@@ -38,30 +38,12 @@
                 <p class="h3">
                     议员个人信息
                 </p>
-                <table class="table table-bordered table-hover">
+                <table class="table table-bordered table-hover" id="mytableA">
                     <tr class="info">
                         <th>议员编号</th>
                         <th>议员名称</th>
                         <th>议员指数</th>
                         <th>所属党派</th>
-                    </tr>
-                    <tr>
-                        <td>1号</td>
-                        <td>张三</td>
-                        <td>70</td>
-                        <td>A</td>
-                    </tr>
-                    <tr>
-                        <td>2号</td>
-                        <td>李四</td>
-                        <td>80</td>
-                        <td>A</td>
-                    </tr>
-                    <tr>
-                        <td>3号</td>
-                        <td>王五</td>
-                        <td>65</td>
-                        <td>B</td>
                     </tr>
                 </table>
             </div>
@@ -82,33 +64,19 @@
             添加一个议员
         </p>
         <!-- 新增加一个议员 -->
-        <form method="get">
-            <div class="row">
-                <div class="col-md-2">
-                    <h4>议员名称:</h4>
-                    <input name="name" type="text" class="form-control">
-                </div>
-                <div class="col-md-2">
-                    <h4>议员指数:</h4>
-                    <input name="Apoint"type="text" class="form-control">
-                </div>
-                <div class="col-md-2">
-                    <h4>所属党派:</h4>
-                    <select class="form-control">
-                        <option name="party">
-                            A
-                        </option>
-                        <option name="party">
-                            B
-                        </option>
-                    </select>
-                </div>
-                <div class="col-md-2">
-                    <br>
-                    <br>
-                    <input type="submit" class="btn" value="提交修改">
-                </div>
-            </div>
+        <form id="Aform">
+            <h4>议员名称:</h4>
+            <input id="namea" type="text" class="form-control">
+            <h4>所属党派:</h4>
+            <select id="partya" class="form-control">
+                <option>
+                    A
+                </option>
+                <option>
+                    B
+                </option>
+            </select>
+            <input type="submit" class="btn" value="提交修改">
         </form>
         <hr>
         <h2 class="text-center">
@@ -121,30 +89,12 @@
                 <p class="h3">
                     议员个人信息
                 </p>
-                <table class="table table-bordered table-hover">
+                <table class="table table-bordered table-hover" id="mytableB">
                     <tr class="info">
                         <th>议员编号</th>
                         <th>议员名称</th>
                         <th>议员指数</th>
                         <th>所属党派</th>
-                    </tr>
-                    <tr>
-                        <td>1号</td>
-                        <td>张三</td>
-                        <td>70</td>
-                        <td>A</td>
-                    </tr>
-                    <tr>
-                        <td>2号</td>
-                        <td>李四</td>
-                        <td>80</td>
-                        <td>A</td>
-                    </tr>
-                    <tr>
-                        <td>3号</td>
-                        <td>王五</td>
-                        <td>65</td>
-                        <td>B</td>
                     </tr>
                 </table>
             </div>
@@ -156,7 +106,7 @@
                 国会矛盾指数
                 </p>
                 <p class="h4">
-                    90
+                    70
                 </p>
             </div>
         </div>
@@ -165,33 +115,19 @@
             添加一个议员
         </p>
         <!-- 新增加一个议员 -->
-        <form>
-            <div class="row">
-                <div class="col-md-2">
-                    <h4>议员名称:</h4>
-                    <input type="text" class="form-control">
-                </div>
-                <div class="col-md-2">
-                    <h4>议员指数:</h4>
-                    <input type="text" class="form-control">
-                </div>
-                <div class="col-md-2">
-                    <h4>所属党派:</h4>
-                    <select class="form-control">
-                        <option>
-                            A
-                        </option>
-                        <option>
-                            B
-                        </option>
-                    </select>
-                </div>
-                <div class="col-md-2">
-                    <br>
-                    <br>
-                    <input type="submit" class="btn" value="提交修改">
-                </div>
-            </div>
+        <form id="Bform">
+            <h4>议员名称:</h4>
+            <input id="nameb" type="text" class="form-control">
+            <h4>所属党派:</h4>
+            <select id="partyb" class="form-control">
+                <option>
+                    A
+                </option>
+                <option>
+                    B
+                </option>
+            </select>
+            <input type="submit" class="btn" value="提交修改">
         </form>
         <hr>
         <h2 class="text-center">
@@ -204,30 +140,12 @@
                 <p class="h3">
                     议员个人信息
                 </p>
-                <table class="table table-bordered table-hover">
+                <table class="table table-bordered table-hover" id="mytableC">
                     <tr class="info">
                         <th>议员编号</th>
                         <th>议员名称</th>
                         <th>议员指数</th>
                         <th>所属党派</th>
-                    </tr>
-                    <tr>
-                        <td>1号</td>
-                        <td>张三</td>
-                        <td>70</td>
-                        <td>A</td>
-                    </tr>
-                    <tr>
-                        <td>2号</td>
-                        <td>李四</td>
-                        <td>80</td>
-                        <td>A</td>
-                    </tr>
-                    <tr>
-                        <td>3号</td>
-                        <td>王五</td>
-                        <td>65</td>
-                        <td>B</td>
                     </tr>
                 </table>
             </div>
@@ -239,7 +157,7 @@
                 国会矛盾指数
                 </p>
                 <p class="h4">
-                    100
+                    70
                 </p>
             </div>
         </div>
@@ -248,34 +166,88 @@
             添加一个议员
         </p>
         <!-- 新增加一个议员 -->
-        <form>
-            <div class="row">
-                <div class="col-md-2">
-                    <h4>议员名称:</h4>
-                    <input type="text" class="form-control">
-                </div>
-                <div class="col-md-2">
-                    <h4>议员指数:</h4>
-                    <input type="text" class="form-control">
-                </div>
-                <div class="col-md-2">
-                    <h4>所属党派:</h4>
-                    <select class="form-control">
-                        <option>
-                            A
-                        </option>
-                        <option>
-                            B
-                        </option>
-                    </select>
-                </div>
-                <div class="col-md-2">
-                    <br>
-                    <br>
-                    <input type="submit" class="btn" value="提交修改">
-                </div>
-            </div>
+        <form id="Cform">
+            <h4>议员名称:</h4>
+            <input id="namec" type="text" class="form-control">
+            <h4>所属党派:</h4>
+            <select id="partyc" class="form-control">
+                <option>
+                    A
+                </option>
+                <option>
+                    B
+                </option>
+            </select>
+            <input type="submit" class="btn" value="提交修改">
         </form>
-    </div>
+        <hr>
+    <script>
+        var k1=0;
+        Aform.addEventListener("submit",(ev) => {
+            k1++;
+            ev.preventDefault();
+            var name1=document.getElementById('namea').value;
+            var party1=document.getElementById('partya').value;
+            console.log(party1);
+            var data={};
+            data['name']=name1;
+            data['party']='Party '+party1;
+            console.log(data);
+            fetch('/api/contestant/add', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(data),
+            })
+            .then(response => response.json())
+            .then(json => {
+                console.log('Success:',json);
+                document.getElementById('mytableA').innerHTML += '<tr><td>'+k1+'号'+'</td><td>'+json.data.name+'</td><td>70</td><td>'+json.data.party+'</td></tr>';
+            ;});
+        });
+        var k2=0;
+        Bform.addEventListener("submit",(ev) => {
+            k2++;
+            ev.preventDefault();
+            var name1=document.getElementById('nameb').value;
+            var party1=document.getElementById('partyb').value;
+            console.log(party1);
+            var data={};
+            data['name']=name1;
+            data['party']='Party '+party1;
+            console.log(data);
+            fetch('/api/contestant/add', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(data),
+            })
+            .then(response => response.json())
+            .then(json => {
+                console.log('Success:',json);
+                document.getElementById('mytableB').innerHTML += '<tr><td>'+k2+'号'+'</td><td>'+json.data.name+'</td><td>70</td><td>'+json.data.party+'</td></tr>';
+            ;});
+        });
+        var k3=0;
+        Cform.addEventListener("submit",(ev) => {
+            k3++;
+            ev.preventDefault();
+            var name1=document.getElementById('namec').value;
+            var party1=document.getElementById('partyc').value;
+            console.log(party1);
+            var data={};
+            data['name']=name1;
+            data['party']='Party '+party1;
+            console.log(data);
+            fetch('/api/contestant/add', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(data),
+            })
+            .then(response => response.json())
+            .then(json => {
+                console.log('Success:',json);
+                document.getElementById('mytableC').innerHTML += '<tr><td>'+k3+'号'+'</td><td>'+json.data.name+'</td><td>70</td><td>'+json.data.party+'</td></tr>';
+            ;});
+        });
+    </script>
 </body>
 </html>
