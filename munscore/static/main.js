@@ -24,21 +24,26 @@ function formatScores(scores) {
     for (var i=0;i<=a.length-1;i++)
     {
         console.log(a[i]);
-        document.getElementById('mytableA').innerHTML += '<tr><td>'+(i+1)+'号'+'</td><td>'+a[i].name+'</td><td onclick="myFunction(this)" id="'+a[i].id+'">'+a[i].score.value+'</td><td>'+a[i].party+'</td></tr>';
+        let row = document.createElement('tr');
+        row.innerHTML = '<th scope="row">'+(i+1)+'号'+'</th><td>'+a[i].name+'</td><td onclick="myFunction(this)" id="'+a[i].id+'">'+a[i].score.value+'</td><td>'+a[i].party+'</td>';
+        document.querySelector('#mytableA > tbody').appendChild(row);
  
     }
     var b=scores.contestants[1];
     for (var i=0;i<=b.length-1;i++)
     {
         console.log(b[i]);
-        document.getElementById('mytableB').innerHTML += '<tr><td>'+(i+1)+'号'+'</td><td>'+b[i].name+'</td><td onclick="myFunction(this)" id="'+b[i].id+'">'+b[i].score.value+'</td><td>'+b[i].party+'</td></tr>';
- 
+        let row = document.createElement('tr');
+        row.innerHTML = '<th scope="row">'+(i+1)+'号'+'</th><td>'+b[i].name+'</td><td onclick="myFunction(this)" id="'+b[i].id+'">'+b[i].score.value+'</td><td>'+b[i].party+'</td>';
+        document.querySelector('#mytableB > tbody').appendChild(row);
     }
     var c=scores.contestants[2];
     for (var i=0;i<=c.length-1;i++)
     {
         console.log(c[i]);
-        document.getElementById('mytableC').innerHTML += '<tr><td>'+(i+1)+'号'+'</td><td>'+c[i].name+'</td><td onclick="myFunction(this)" id="'+c[i].id+'">'+c[i].score.value+'</td><td>'+c[i].party+'</td></tr>';
+        let row = document.createElement('tr');
+        row.innerHTML = '<th scope="row">'+(i+1)+'号'+'</th><td>'+c[i].name+'</td><td onclick="myFunction(this)" id="'+c[i].id+'">'+c[i].score.value+'</td><td>'+c[i].party+'</td>';
+        document.querySelector('#mytableC > tbody').appendChild(row);
     }
     console.log(scores);
     document.getElementById('A_Party_Score').innerHTML = scores.parties[0].score.value;
