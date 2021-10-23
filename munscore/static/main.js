@@ -20,26 +20,33 @@ function formatScores(scores) {
     }
     
     // 将数据填充进 HTML 页面
-    
-    // var formdata = new FormData();
-    // var theScore=document.querySelector('#score');
-    // var scoreId=theScore.dataset.score_id;
-    // console.log(scoreId);
-    // formdata.append("score_id", scoreId);
-    // formdata.append("value", "80");
-
-    // var requestOptions = {
-    //   method: 'POST',
-    //   body: formdata,
-    //   redirect: 'follow'
-    // };
-
-    // fetch("/api/score/set", requestOptions)
-    // .then(response => response.json())
-    // .then(json => {
-    //     console.log('Success!!!',json);
-    //     document.getElementById('score').innerHTML = json.formdata.value;
-    // ;});
+    var a=scores.contestants[0];
+    for (var i=0;i<=a.length-1;i++)
+    {
+        console.log(a[i]);
+        document.getElementById('mytableA').innerHTML += '<tr><td>'+(i+1)+'号'+'</td><td>'+a[i].name+'</td><td onclick="myFunction(this)" id="'+a[i].id+'">'+a[i].score.value+'</td><td>'+a[i].party+'</td></tr>';
+ 
+    }
+    var b=scores.contestants[1];
+    for (var i=0;i<=b.length-1;i++)
+    {
+        console.log(b[i]);
+        document.getElementById('mytableB').innerHTML += '<tr><td>'+(i+1)+'号'+'</td><td>'+b[i].name+'</td><td onclick="myFunction(this)" id="'+b[i].id+'">'+b[i].score.value+'</td><td>'+b[i].party+'</td></tr>';
+ 
+    }
+    var c=scores.contestants[2];
+    for (var i=0;i<=c.length-1;i++)
+    {
+        console.log(c[i]);
+        document.getElementById('mytableC').innerHTML += '<tr><td>'+(i+1)+'号'+'</td><td>'+c[i].name+'</td><td onclick="myFunction(this)" id="'+c[i].id+'">'+c[i].score.value+'</td><td>'+c[i].party+'</td></tr>';
+    }
+    console.log(scores);
+    document.getElementById('A_Party_Score').innerHTML = scores.parties[0].score.value;
+    document.getElementById('B_Party_Score').innerHTML = scores.parties[1].score.value;
+    document.getElementById('VenueA_score').innerHTML = scores.venues[0].score.value;
+    document.getElementById('VenueB_score').innerHTML = scores.venues[1].score.value;
+    document.getElementById('VenueC_score').innerHTML = scores.venues[2].score.value;
+ 
 }
 
 function myFunction(obj)
