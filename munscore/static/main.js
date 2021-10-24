@@ -20,12 +20,17 @@ function formatScores(scores) {
     }
     
     // 将数据填充进 HTML 页面
+
+    document.querySelector('#mytableA > tbody').innerHTML = '';
+    document.querySelector('#mytableB > tbody').innerHTML = '';
+    document.querySelector('#mytableC > tbody').innerHTML = '';
+
     var a=scores.contestants[0];
     for (var i=0;i<=a.length-1;i++)
     {
         console.log(a[i]);
         let row = document.createElement('tr');
-        row.innerHTML = '<th scope="row">'+(i+1)+'号'+'</th><td>'+a[i].name+'</td><td onclick="myFunction(this)" id="'+a[i].id+'">'+a[i].score.value+'</td><td>'+a[i].party+'</td>';
+        row.innerHTML = '<th scope="row">'+a[i].id+' 号'+'</th><td>'+a[i].name+'</td><td onclick="myFunction(this)" id="'+a[i].id+'">'+a[i].score.value+'</td><td>'+a[i].party+'</td>';
         document.querySelector('#mytableA > tbody').appendChild(row);
  
     }
@@ -34,7 +39,7 @@ function formatScores(scores) {
     {
         console.log(b[i]);
         let row = document.createElement('tr');
-        row.innerHTML = '<th scope="row">'+(i+1)+'号'+'</th><td>'+b[i].name+'</td><td onclick="myFunction(this)" id="'+b[i].id+'">'+b[i].score.value+'</td><td>'+b[i].party+'</td>';
+        row.innerHTML = '<th scope="row">'+b[i].id+' 号'+'</th><td>'+b[i].name+'</td><td onclick="myFunction(this)" id="'+b[i].id+'">'+b[i].score.value+'</td><td>'+b[i].party+'</td>';
         document.querySelector('#mytableB > tbody').appendChild(row);
     }
     var c=scores.contestants[2];
@@ -42,7 +47,7 @@ function formatScores(scores) {
     {
         console.log(c[i]);
         let row = document.createElement('tr');
-        row.innerHTML = '<th scope="row">'+(i+1)+'号'+'</th><td>'+c[i].name+'</td><td onclick="myFunction(this)" id="'+c[i].id+'">'+c[i].score.value+'</td><td>'+c[i].party+'</td>';
+        row.innerHTML = '<th scope="row">'+c[i].id+' 号'+'</th><td>'+c[i].name+'</td><td onclick="myFunction(this)" id="'+c[i].id+'">'+c[i].score.value+'</td><td>'+c[i].party+'</td>';
         document.querySelector('#mytableC > tbody').appendChild(row);
     }
     console.log(scores);
