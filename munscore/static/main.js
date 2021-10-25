@@ -21,17 +21,17 @@ function formatScores(scores) {
     
     // 将数据填充进 HTML 页面
 
-    document.querySelector('#mytableA > tbody').innerHTML = '';
-    document.querySelector('#mytableB > tbody').innerHTML = '';
-    document.querySelector('#mytableC > tbody').innerHTML = '';
+    // document.querySelector('#mytableA > tbody').innerHTML = '';
+    // document.querySelector('#mytableB > tbody').innerHTML = '';
+    // document.querySelector('#mytableC > tbody').innerHTML = '';
 
     var a=scores.contestants[0];
     for (var i=0;i<=a.length-1;i++)
     {
         console.log(a[i]);
         let row = document.createElement('tr');
-        row.innerHTML = '<th scope="row">'+a[i].id+' 号'+'</th><td>'+a[i].name+'</td><td onclick="myFunction(this)" id="'+a[i].id+'">'+a[i].score.value+'</td><td>'+a[i].party+'</td>';
-        document.querySelector('#mytableA > tbody').appendChild(row);
+        row.innerHTML = '<th scope="row">'+(i+1)+' 号'+'</th><td>'+a[i].name+'</td><td onclick="myFunction(this)" id="'+a[i].id+'">'+a[i].score.value+'</td><td>'+a[i].party+'</td>';
+        // document.querySelector('#mytableA > tbody').appendChild(row);
  
     }
     var b=scores.contestants[1];
@@ -39,18 +39,48 @@ function formatScores(scores) {
     {
         console.log(b[i]);
         let row = document.createElement('tr');
-        row.innerHTML = '<th scope="row">'+b[i].id+' 号'+'</th><td>'+b[i].name+'</td><td onclick="myFunction(this)" id="'+b[i].id+'">'+b[i].score.value+'</td><td>'+b[i].party+'</td>';
-        document.querySelector('#mytableB > tbody').appendChild(row);
+        row.innerHTML = '<th scope="row">'+(i+1)+' 号'+'</th><td>'+b[i].name+'</td><td onclick="myFunction(this)" id="'+b[i].id+'">'+b[i].score.value+'</td><td>'+b[i].party+'</td>';
+        // document.querySelector('#mytableB > tbody').appendChild(row);
     }
     var c=scores.contestants[2];
     for (var i=0;i<=c.length-1;i++)
     {
         console.log(c[i]);
         let row = document.createElement('tr');
-        row.innerHTML = '<th scope="row">'+c[i].id+' 号'+'</th><td>'+c[i].name+'</td><td onclick="myFunction(this)" id="'+c[i].id+'">'+c[i].score.value+'</td><td>'+c[i].party+'</td>';
-        document.querySelector('#mytableC > tbody').appendChild(row);
+        row.innerHTML = '<th scope="row">'+(i+1)+' 号'+'</th><td>'+c[i].name+'</td><td onclick="myFunction(this)" id="'+c[i].id+'">'+c[i].score.value+'</td><td>'+c[i].party+'</td>';
+        // document.querySelector('#mytableC > tbody').appendChild(row);
     }
     console.log(scores);
+    A_Party_Score.addEventListener("click",(ev) => {
+        var value=prompt("输入新的政府执行力指数");
+        scores.parties[0].score.value=value;
+        console.log(scores.parties[0].score.value);
+        document.getElementById('A_Party_Score').innerHTML = value;
+      });
+    B_Party_Score.addEventListener("click",(ev) => {
+        var value=prompt("输入新的政府执行力指数");
+        scores.parties[1].score.value=value;
+        console.log(scores.parties[1].score.value);
+        document.getElementById('B_Party_Score').innerHTML = value;
+      });
+    VenueA_score.addEventListener("click",(ev) => {
+        var value=prompt("输入新的国会矛盾指数");
+        scores.venues[0].score.value=value;
+        console.log(scores.venues[0].score.value);
+        document.getElementById('VenueA_score').innerHTML = value;
+      });
+    VenueB_score.addEventListener("click",(ev) => {
+        var value=prompt("输入新的国会矛盾指数");
+        scores.venues[1].score.value=value;
+        console.log(scores.venues[1].score.value);
+        document.getElementById('VenueB_score').innerHTML = value;
+      });
+    VenueC_score.addEventListener("click",(ev) => {
+        var value=prompt("输入新的国会矛盾指数");
+        scores.venues[2].score.value=value;
+        console.log(scores.venues[2].score.value);
+        document.getElementById('VenueC_score').innerHTML = value;
+      });
     document.getElementById('A_Party_Score').innerHTML = scores.parties[0].score.value;
     document.getElementById('B_Party_Score').innerHTML = scores.parties[1].score.value;
     document.getElementById('VenueA_score').innerHTML = scores.venues[0].score.value;
@@ -65,8 +95,9 @@ function myFunction(obj)
     console.log(scoreId);
     var formdata = new FormData();
     formdata.append("score_id", scoreId);
-    formdata.append("value", "88");
-
+    var value=prompt("输入新的议员指数");
+    console.log(value);
+    formdata.append("value", value);
     var requestOptions = {
       method: 'POST',
       body: formdata,
@@ -79,6 +110,7 @@ function myFunction(obj)
         document.getElementById(scoreId).innerHTML = json.data.value;
     ;});
 }
+
 
 
 var k1=0;
