@@ -31,6 +31,14 @@ function formatScores(scores) {
                 <th scope="row">${contestant.id} 号</th>
                 <td>${contestant.name}</td>
                 <td class="score-editable" id="${contestant.id}">${contestant.score.value}</td>
+                <td>
+                    <button type="button" class="btn btn-primary score-button" data-scoreid="${contestant.id}">
+                    +1
+                    </button>
+                    <button type="button" class="btn btn-primary score-button" data-scoreid="${contestant.id}">
+                    -1
+                    </button>
+                </td>
                 <td>${contestant.party}</td>
             `;
             document.querySelectorAll('.contestant-scores > tbody')[i].appendChild(row);
@@ -47,6 +55,8 @@ function formatScores(scores) {
 
     // 绑定点击修改分数事件
     document.querySelectorAll('.score-editable').forEach(element => element.addEventListener('click', setScore));
+    document.querySelectorAll('.score-button').forEach(e => e.addEventListener('click',changeScore));
+    document.querySelectorAll('.delete-button').forEach(e => e.addEventListener('click',deleteContestant));
 }
 
 
@@ -72,6 +82,48 @@ function setScore(element) {
     });
 }
 
+function changeScore(element)
+{
+    const scoreId = element.target.dataset.scoreid;
+    const formdata = new FormData();
+    formdata.append('score_id', scoreId);
+    console.log(scoreId);
+    if (element.target.innerHTML==+1)
+    {
+        formdata.append('change', 1);
+    }else
+    {
+        formdata.append('change', -1);
+    }
+    var requestOptions = {
+    method: 'POST',
+    body: formdata,
+    };
+    fetch("/api/score/update", requestOptions)
+    .then(response => response.json())
+    .then(json => {
+        console.log(json);
+    });
+}
+
+// function deleteContestant(element)
+// {
+//     const contestantId = element.target.dataset.scoreid;
+//     const formdata = new FormData();
+//     formdata.append('id', contestantId);
+
+//     var requestOptions = {
+//     method: 'POST',
+//     body: formdata,
+//     };
+
+//     fetch("/api/contestant/remove", requestOptions)
+//     .then(response => response.json())
+//     .then(json => {
+//         console.log(json);
+//     });
+// }
+
 
 function isNonnegativeInteger(str) {
     str = str.trim();
@@ -83,6 +135,16 @@ function isNonnegativeInteger(str) {
     return n !== Infinity && String(n) === str && n >= 0;
 }
 
+function startRace()
+{
+    var requestOptions = {
+        method: 'POST',
+      };
+    fetch("/api/contest/start", requestOptions)
+        .then(response => response.text())
+        .then(result => console.log(result))
+        .catch(error => console.log('error', error));
+}
 
 const socket = io.connect('/');
 let pageInitialized = false;
