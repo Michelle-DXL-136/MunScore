@@ -29,11 +29,14 @@ function formatScores(scores) {
             let row = document.createElement('tr');
             row.innerHTML = `
                 <th scope="row">${contestant.id} 号</th>
-                <td>${contestant.name}</td>
+                <td class="contestant-name-container">
+                    <span>${contestant.name}</span>
+                    <span class="delete-button text-danger" data-contestant-id="${contestant.id}"><i class="fas fa-trash "></i></span>
+                </td>
                 <td class="d-flex justify-content-between" id="${contestant.id}">
-                <span class="score-button score-subtract" data-scoreid="${contestant.score.id}"><i class="fas fa-subtract"></i></span>
-                <span class="score-editable">${contestant.score.value}</span>
-                <span class="score-button score-add" data-scoreid="${contestant.score.id}"><i class="fas fa-plus"></i></span>
+                    <span class="score-button score-subtract" data-scoreid="${contestant.score.id}"><i class="fas fa-subtract"></i></span>
+                    <span class="score-editable">${contestant.score.value}</span>
+                    <span class="score-button score-add" data-scoreid="${contestant.score.id}"><i class="fas fa-plus"></i></span>
                 </td>
                 </td>
                 <td>${contestant.party}</td>
@@ -103,22 +106,27 @@ function changeScore(event) {
 }
 
 
-// function deleteContestant(event) {
-//     const contestantId = event.currentTarget.dataset.scoreid;
-//     const formdata = new FormData();
-//     formdata.append('id', contestantId);
+function deleteContestant(event) {
+    const contestantId = event.currentTarget.dataset.contestantId;
+    const contestantName = event.currentTarget.parentNode.children[0].innerHTML;
 
-//     var requestOptions = {
-//     method: 'POST',
-//     body: formdata,
-//     };
+    if (!confirm(`是否确定移除“${contestantName}”选手？`)) {
+        return;
+    }
 
-//     fetch("/api/contestant/remove", requestOptions)
-//     .then(response => response.json())
-//     .then(json => {
-//         console.log(json);
-//     });
-// }
+    const formdata = new FormData();
+    formdata.append('id', contestantId);
+    const requestOptions = {
+        method: 'POST',
+        body: formdata,
+    };
+
+    fetch('/api/contestant/remove', requestOptions)
+    .then(response => response.json())
+    .then(json => {
+        console.log(json);
+    });
+}
 
 
 function startRace() {

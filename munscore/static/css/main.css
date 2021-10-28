@@ -1,5 +1,5 @@
 table.table-bordered tbody {
-   border-width: 1px  0   0  1px;
+   border-width: 1px 0 0 1px;
 }
 
 table.table-bordered td {
@@ -23,5 +23,21 @@ table.table-bordered td {
 }
 
 .score-button:hover {
-    opacity: 0.6;
+    opacity: 0.5;
+}
+
+.delete-button {
+    /* float: right; */
+    margin-left: 1ex;
+    cursor: pointer;
+    visibility: hidden;
+    transition: opacity 200ms ease;
+}
+
+.contestant-name-container:hover > .delete-button {
+    visibility: visible;
+}
+
+.contestant-name-container:hover > .delete-button:hover {
+    opacity: 0.5;
 }
