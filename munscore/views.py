@@ -13,5 +13,6 @@ def serve_static(path):
 
 
 @app.route('/history')
+@app.route('/history/')
 def history_page():
-    return render_template('history.html')
+    return send_from_directory('static', 'history.html')

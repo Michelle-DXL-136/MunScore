@@ -1,25 +1,25 @@
-const contestantScoreInfo = {};
-const partyScoreInfo = {};
-const venueScoreInfo = {};
 const scores = {};
+const scoreInfo = {};
+let partyIds = [];
+let venueIds = [];
+
+let currentNavElement;
+
+const ctx = document.getElementById('data-chart');
+const dataChart = new Chart(ctx, baseChartSetting);
+
 
 fetch('/api/scores')
 .then(r => r.json())
 .then(json => {
     initializePage(json);
     initializeInfo(json);
-});
-
-
-fetch('/api/scores/history')
-.then(r => r.json())
-.then(json => {
-    console.log(json);
-    const plotData = json.data.map(rawToScatter);
-
-    console.log(plotData);
-    setChartData(myChart, plotData, legends);
-});
+})
+.then(() => {
+    fetch('/api/scores/history')
+    .then(r => r.json())
+    .then(initializeData);
+})
 
 
 function initializePage(json) {
@@ -48,33 +48,74 @@ function initializePage(json) {
 
 
 function initializeInfo(json) {
-    json.data.contestants.forEach(venueContestants => {
-        venueContestants.forEach(contestant => {
-            contestantScoreInfo[contestant.score.id] = {
-                scoreName: contestant.score.name,
-                ownerName: contestant.name,
-                ownerParty: contestant.party,
-                ownerVenue: contestant.venue,
-            };
-        });
-    });
-    json.data.parties.forEach(party => {
-        partyScoreInfo[party.score.id] = {
-            scoreName: party.score.name,
-            ownerName: party.name,
+    let arr = json.data.contestants.flat();
+    arr = arr.concat(json.data.parties);
+    arr = arr.concat(json.data.venues);
+
+    arr.forEach(entity => {
+        scoreInfo[entity.score.id] = {
+            scoreName: entity.score.name,
+            ownerName: entity.name,
         };
     });
-    json.data.venues.forEach(venue => {
-        venueScoreInfo[venue.score.id] = {
-            scoreName: venue.score.name,
-            ownerName: venue.name,
-        };
-    });
+
+    partyIds = json.data.parties.map(e => e.score.id);
+    venueIds = json.data.venues.map(e => e.score.id);
+}
+
+
+function initializeData(json) {
+    const plotData = json.data.map(rawToScatter);
+    for (let i = 0; i < json.data.length; i++) {
+        const scoreId = json.data[i].id;
+        const scoreName = json.data[i].name;
+        if (!(scoreId in scoreInfo)) continue;
+        scores[scoreId] = {
+            name: scoreName,
+            owner: scoreInfo[scoreId].ownerName,
+            data: plotData[i],
+        }
+    }
+    setChartData(currentNavElement);
+}
+
+
+function rawToScatter(rawData) {
+    const xs = rawData.timestamps;
+    const ys = rawData.values;
+    const tsStart = xs[0];
+    const scatterData = [];
+    const prev = {x: null, y: null};
+
+    for (let i = 0; i < xs.length; i++) {
+        const x = xs[i] - tsStart;
+        const y = ys[i];
+        
+        if (i === 0) {
+            // Do nothing
+        } else if (x === prev.x) {
+            // Note we assume no two updates are made in the same second,
+            // So we will simply ignore this case and throw an error.
+            // throw Error('Two updates in the same second');
+            // Actually this is totally fine ;)
+        } else if (x === prev.x + 1) {
+            // Do nothing
+        } else {
+            scatterData.push({x: x - 1, y: prev.y});
+        }
+
+        scatterData.push({x: x, y: y});
+
+        prev.x = x;
+        prev.y = y;
+    }
+
+    return scatterData;
 }
 
 
 function navClicked(event) {
-    let target = event.currentTarget;
+    const target = event.currentTarget;
     if (target.classList.contains('active')) {return;}
 
     currentNavElement.classList.remove('active');
@@ -85,61 +126,22 @@ function navClicked(event) {
 }
 
 
-function rawToScatter(rawData) {
-    const xRaw = rawData.timestamps;
-    const yRaw = rawData.values;
-    const tsStart = xRaw[0];
-    const xFinal = [];
-    const yFinal = [];
-    let xPrev, yPrev;
-
-    for (let i = 0; i < xRaw.length; i++) {
-        const x = xRaw[i] - tsStart;
-        const y = yRaw[i];
-        
-        if (i === 0) {
-            // Do nothing
-        } else if (x === xPrev) {
-            // Note we assume no two updates are made in the same second,
-            // So we will simply ignore this case and throw an error.
-            // throw Error('Two updates in the same second');
-            // Actually this is totally fine ;)
-        } else if (x === xPrev + 1) {
-            // Do nothing
-        } else {
-            xFinal.push(x - 1);
-            yFinal.push(yPrev);
-        }
-
-        xFinal.push(x);
-        yFinal.push(y);
-
-        xPrev = x;
-        yPrev = y;
+function setChartData(navElement) {
+    let ids = [];
+    if (navElement.classList.contains('party-scores')) {
+        ids = partyIds;
+    } else if (navElement.classList.contains('venue-scores')) {
+        ids = venueIds;
+    } else {
+        ids.push(navElement.dataset.scoreId);
     }
-
-    return {x: xFinal, y: yFinal};
-}
-
-
-function setChartData(chart, datasets, legends) {
-    currentNavElement
     
-    chart.data.datasets = [];
-    for (let i = 0; i < datasets.length; i++) {
-        chart.data.datasets.push(Object.assign({}, baseDatasetSetting));
-        chart.data.datasets[i].data = [];
-        chart.data.datasets[i].label = legends[i];
-        for (let j = 0; j < datasets[i].x.length; j++) {
-            chart.data.datasets[i].data.push({x: datasets[i].x[j], y: datasets[i].y[j]});
-        }
+    dataChart.data.datasets = [];
+    for (let i = 0; i < ids.length; i++) {
+        dataChart.data.datasets.push(Object.assign({}, baseDatasetSetting));
+        dataChart.data.datasets[i].data = [];
+        // dataChart.data.datasets[i].label = legends[i];
+        dataChart.data.datasets[i].data = scores[ids[i]].data;
     }
-    chart.update();
+    dataChart.update();
 }
-
-let currentNavElement;
-initializePage();
-
-const ctx = document.getElementById('myChart');
-
-const myChart = new Chart(ctx, baseChartSetting);
