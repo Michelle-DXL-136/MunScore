@@ -10,3 +10,8 @@ def index_page():
 @app.route('/static/<path:path>')
 def serve_static(path):
     return send_from_directory('static', path)
+
+
+@app.route('/history')
+def history_page():
+    return render_template('history.html')
