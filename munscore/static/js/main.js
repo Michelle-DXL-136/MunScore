@@ -214,4 +214,3 @@ document.querySelectorAll('.add-contestant-form').forEach(e => {
         });
     });
 });
-
