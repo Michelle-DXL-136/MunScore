@@ -130,13 +130,46 @@ function deleteContestant(event) {
 
 
 function toggleStatus() {
+    let url;
+    if (document.querySelector('#status-button').classList.contains('btn-outline-danger')) {
+        url = '/api/contest/stop';
+    } else {
+        url = '/api/contest/start'
+    }
+
     const requestOptions = {
         method: 'POST',
     };
-    fetch('/api/contest/start', requestOptions)
+    fetch(url, requestOptions)
     .then(response => response.text())
     .then(result => console.log(result))
     .catch(error => console.log('error', error));
+}
+
+
+function updateStatusButton(status) {
+    let msg, buttonClass;
+    switch (status.code) {
+        case 0:
+            msg = '开始比赛';
+            buttonClass = 'btn-outline-success';
+            break;
+        case 1:
+            msg = '暂停比赛';
+            buttonClass = 'btn-outline-danger';
+            break;
+        case 2:
+            msg = '开始比赛';
+            buttonClass = 'btn-outline-success';
+            break
+    }
+
+    const btn = document.querySelector('#status-button');
+    btn.innerHTML = msg;
+    btn.classList.remove('btn-outline-success');
+    btn.classList.remove('btn-outline-danger');
+    btn.classList.add(buttonClass);
+    console.log(status, msg, buttonClass)
 }
 
 
@@ -155,6 +188,9 @@ const socket = io.connect('/');
 let pageInitialized = false;
 
 socket.on('scores', formatScores);
+socket.on('contest', updateStatusButton);
+
+document.querySelector('#status-button').addEventListener('click', toggleStatus);
 
 document.querySelectorAll('.add-contestant-form').forEach(e => {
     e.addEventListener('submit', event => {
@@ -179,4 +215,3 @@ document.querySelectorAll('.add-contestant-form').forEach(e => {
     });
 });
 
-document.querySelector('#status-button').addEventListener('click', toggleStatus);

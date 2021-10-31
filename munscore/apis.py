@@ -154,8 +154,12 @@ def stop_contest():
 
 @socketio.on('connect')
 def on_connect():
-    data = get_all_scores()
-    emit('scores', data, json=True)
+    scores = get_all_scores()
+    emit('scores', scores, json=True)
+
+    state = {0: 'Stopped', 1: 'Running', 2: 'Paused'}[scheduler.state]
+    data = {'code': scheduler.state, 'state': state}
+    emit('contest', data, json=True)
 
 
 def broadcast_all_data():
