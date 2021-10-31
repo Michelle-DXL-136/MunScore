@@ -1,7 +1,10 @@
 const baseChartOptions = {
     scales: {
         x: {
-            // type: 'time',
+            title: {
+                display: true,
+                text: '自开始时间（分钟）',
+            },
             ticks: {
                 callback: (value, index, values) => Math.round(value / 60),
                 maxTicksLimit: 8,
@@ -9,6 +12,10 @@ const baseChartOptions = {
             }
         },
         y: {
+            title: {
+                display: true,
+                text: '分值',
+            },
             beginAtZero: true,
         },
     },
@@ -18,10 +25,10 @@ const baseChartOptions = {
         }
     },
     legend: {
-        onHover: function (event, legendItem) {
-            var chart = this.chart;
-            var index = legendItem.index;
-            var segment = chart.getDatasetMeta(0).data[index];
+        onHover: (event, legendItem) => {
+            const chart = this.chart;
+            const index = legendItem.index;
+            const segment = chart.getDatasetMeta(0).data[index];
             chart.tooltip._active = [segment]
             chart.tooltip.update()
             chart.draw()

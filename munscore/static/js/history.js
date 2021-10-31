@@ -74,7 +74,7 @@ function initializeData(json) {
             name: scoreName,
             owner: scoreInfo[scoreId].ownerName,
             data: plotData[i],
-        }
+        };
     }
     setChartData(currentNavElement);
 }
@@ -86,10 +86,13 @@ function rawToScatter(rawData) {
     const tsStart = xs[0];
     const scatterData = [];
     const prev = {x: null, y: null};
-
+    const now = Math.ceil(Date.now() / 1000);
+    
     for (let i = 0; i < xs.length; i++) {
         const x = xs[i] - tsStart;
         const y = ys[i];
+
+        // if (now - xs[i] > 24 * 60 * 60) continue;
         
         if (i != 0 && x != prev.x && x != prev.x + 1) {
             scatterData.push({x: x - 1, y: prev.y});
@@ -99,6 +102,7 @@ function rawToScatter(rawData) {
         prev.x = x;
         prev.y = y;
     }
+    scatterData.push({x: now - tsStart, y: prev.y});
 
     return scatterData;
 }
