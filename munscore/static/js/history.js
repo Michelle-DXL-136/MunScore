@@ -91,19 +91,9 @@ function rawToScatter(rawData) {
         const x = xs[i] - tsStart;
         const y = ys[i];
         
-        if (i === 0) {
-            // Do nothing
-        } else if (x === prev.x) {
-            // Note we assume no two updates are made in the same second,
-            // So we will simply ignore this case and throw an error.
-            // throw Error('Two updates in the same second');
-            // Actually this is totally fine ;)
-        } else if (x === prev.x + 1) {
-            // Do nothing
-        } else {
+        if (i != 0 && x != prev.x && x != prev.x + 1) {
             scatterData.push({x: x - 1, y: prev.y});
         }
-
         scatterData.push({x: x, y: y});
 
         prev.x = x;
@@ -135,13 +125,15 @@ function setChartData(navElement) {
     } else {
         ids.push(navElement.dataset.scoreId);
     }
+    const legends = ids.map(id => scoreInfo[id].ownerName);
     
     dataChart.data.datasets = [];
     for (let i = 0; i < ids.length; i++) {
         dataChart.data.datasets.push(Object.assign({}, baseDatasetSetting));
-        dataChart.data.datasets[i].data = [];
-        // dataChart.data.datasets[i].label = legends[i];
+        dataChart.data.datasets[i].label = legends[i];
         dataChart.data.datasets[i].data = scores[ids[i]].data;
+        dataChart.data.datasets[i].backgroundColor = chartColors[i % chartColors.length];
+        dataChart.data.datasets[i].borderColor = chartColors[i % chartColors.length];
     }
     dataChart.update();
 }
