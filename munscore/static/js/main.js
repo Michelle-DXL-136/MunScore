@@ -34,9 +34,9 @@ function formatScores(scores) {
                     <span class="delete-button text-danger" data-contestant-id="${contestant.id}"><i class="fas fa-trash "></i></span>
                 </td>
                 <td class="d-flex justify-content-between" id="${contestant.id}">
-                    <span class="score-button score-subtract" data-scoreid="${contestant.score.id}"><i class="fas fa-subtract"></i></span>
+                    <span class="score-button score-subtract" data-scoreid="${contestant.score.id}"><i class="far fa-subtract"></i></span>
                     <span class="score-editable">${contestant.score.value}</span>
-                    <span class="score-button score-add" data-scoreid="${contestant.score.id}"><i class="fas fa-plus"></i></span>
+                    <span class="score-button score-add" data-scoreid="${contestant.score.id}"><i class="far fa-plus"></i></span>
                 </td>
                 </td>
                 <td>${contestant.party}</td>
@@ -129,7 +129,7 @@ function deleteContestant(event) {
 }
 
 
-function startRace() {
+function toggleStatus() {
     const requestOptions = {
         method: 'POST',
     };
@@ -178,3 +178,5 @@ document.querySelectorAll('.add-contestant-form').forEach(e => {
         });
     });
 });
+
+document.querySelector('#status-button').addEventListener('click', toggleStatus);
