@@ -1,17 +1,46 @@
 function initializePage(scores) {
     // 填充党派选择选项
-    let parties = scores.parties.map(p => p.name);
-    let partiesText = parties.map(p => `<option>${p}</option>`).join('');
+    const parties = scores.parties.map(p => p.name);
+    const partiesText = parties.map(p => `<option>${p}</option>`).join('');
     document.querySelectorAll('.party-select').forEach(el => {
         el.innerHTML = partiesText;
     });
 
-    // 用分数 ID 覆盖元素 ID
-    document.getElementById('A_Party_Score').id = scores.parties[0].score.id;
-    document.getElementById('B_Party_Score').id = scores.parties[1].score.id;
-    document.getElementById('VenueA_score').id = scores.venues[0].score.id;
-    document.getElementById('VenueB_score').id = scores.venues[1].score.id;
-    document.getElementById('VenueC_score').id = scores.venues[2].score.id;
+    // 初始化党派分数和按钮
+    scores.parties.forEach((party, i) => {
+        const container = document.querySelectorAll('.party-container')[i];
+        let p = document.createElement('p');
+        p.classList.add('h4', 'mt-2', 'text-center');
+        p.innerHTML = party.name + party.score.name;
+        container.appendChild(p);
+        
+        p = document.createElement('p');
+        p.classList.add('h4', 'text-center');
+        p.innerHTML = `
+            <span class="score-button score-subtract h5" data-scoreid="${party.score.id}"><i class="fas fa-subtract"></i></span>
+            <span class="score-editable party-score mx-2" id="${party.score.id}"></span>
+            <span class="score-button score-add h5" data-scoreid="${party.score.id}"><i class="fas fa-plus"></i></span>
+        `;
+        container.appendChild(p);
+    });
+    
+    // 初始化会场分数和按钮
+    scores.venues.forEach((venue, i) => {
+        const container = document.querySelectorAll('.venue-container')[i];
+        let p = document.createElement('p');
+        p.classList.add('h4');
+        p.innerHTML = venue.score.name;
+        container.appendChild(p);
+        
+        p = document.createElement('p');
+        p.classList.add('h4');
+        p.innerHTML = `
+            <span class="score-button score-subtract h5" data-scoreid="${venue.score.id}"><i class="fas fa-subtract"></i></span>
+            <span class="score-editable venue-score mx-2" id="${venue.score.id}"></span>
+            <span class="score-button score-add h5" data-scoreid="${venue.score.id}"><i class="fas fa-plus"></i></span>
+        `;
+        container.appendChild(p);
+    });
 }
 
 
@@ -31,7 +60,7 @@ function formatScores(scores) {
                 <th scope="row">${contestant.id} 号</th>
                 <td class="contestant-name-container">
                     <span>${contestant.name}</span>
-                    <span class="delete-button text-danger" data-contestant-id="${contestant.id}"><i class="fas fa-trash "></i></span>
+                    <span class="delete-button text-danger" data-contestant-id="${contestant.id}"><i class="fas fa-trash"></i></span>
                 </td>
                 <td class="d-flex justify-content-between" id="${contestant.id}">
                     <span class="score-button score-subtract" data-scoreid="${contestant.score.id}"><i class="far fa-subtract"></i></span>

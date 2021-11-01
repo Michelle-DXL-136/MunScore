@@ -13,7 +13,7 @@
 </head>
 
 <body>
-    <div class="container mt-4">
+    <div class="container my-4">
         <!-- 标题 -->
         <div class="row">
             <h1 class="text-center">模拟联合国数据模型</h1>
@@ -25,14 +25,8 @@
         <hr>
         <!-- 两党政府执行力指数 -->
         <div class="row">
-            <div class="col-md-6" style="background: #DBECF9">
-                <p class="h3">A 党政府执行力</p>
-                <span class="h3 score-editable party-score" id="A_Party_Score"></span>
-            </div>
-            <div class="col-md-6" style="background: #F2DEDF;">
-                <p class="h3">B 党政府执行力</p>
-                <span class="h3 score-editable party-score" id="B_Party_Score"></span>
-            </div>
+            <div class="col-md-6 party-container" style="background: #DBECF9"></div>
+            <div class="col-md-6 party-container" style="background: #F2DEDF;"></div>
         </div>
         <hr>
 
@@ -58,10 +52,7 @@
             <br>
 
             <!-- 整体指数 -->
-            <div class="col-md-4">
-                <p class="h3">国会矛盾指数</p>
-                <span class="h4 score-editable venue-score" id="VenueA_score"></span>
-            </div>
+            <div class="col-md-4 venue-container"></div>
         </div>
         <br>
         <p class="h3">添加一个议员</p>
@@ -105,10 +96,7 @@
             <br>
 
             <!-- 整体指数 -->
-            <div class="col-md-4">
-                <p class="h3">国会矛盾指数</p>
-                <span class="h4 score-editable venue-score" id="VenueB_score"></span>
-            </div>
+            <div class="col-md-4 venue-container"></div>
         </div>
         <br>
         <p class="h3">添加一个议员</p>
@@ -152,10 +140,7 @@
             <br>
 
             <!-- 整体指数 -->
-            <div class="col-md-4">
-                <p class="h3">国会矛盾指数</p>
-                <span class="h4 score-editable venue-score" id="VenueC_score"></span>
-            </div>
+            <div class="col-md-4 venue-container"></div>
         </div>
         <br>
         <p class="h3">添加一个议员</p>
@@ -175,7 +160,6 @@
                 <button type="submit" class="btn btn-outline-secondary">确定添加</button>
             </div>
         </form>
-        <hr>
 
     </div>
     
