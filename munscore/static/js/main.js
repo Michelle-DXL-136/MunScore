@@ -95,7 +95,7 @@ function setScore(event) {
     const formdata = new FormData();
     const value = prompt('输入新的分数数值', currentValue);
 
-    if (value == null || !isNonnegativeInteger(value)) return;
+    if (value == null || !isValidScore(value)) return;
 
     formdata.append('score_id', scoreId);
     formdata.append('value', value);
@@ -202,14 +202,10 @@ function updateStatusButton(status) {
 }
 
 
-function isNonnegativeInteger(str) {
+function isValidScore(str) {
     str = str.trim();
-    if (!str) {
-        return false;
-    }
-    str = str.replace(/^0+/, '') || '0';
-    const n = Math.floor(Number(str));
-    return n !== Infinity && String(n) === str && n >= 0;
+    if (!str) return false;
+    return /^[-+]?\d+$/.test(str);
 }
 
 
