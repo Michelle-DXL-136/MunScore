@@ -83,16 +83,22 @@ function initializeData(json) {
 function rawToScatter(rawData) {
     const xs = rawData.timestamps;
     const ys = rawData.values;
-    const tsStart = xs[0];
     const scatterData = [];
     const prev = {x: null, y: null};
     const now = Math.ceil(Date.now() / 1000);
+    let skipped = false;
     
     for (let i = 0; i < xs.length; i++) {
-        const x = xs[i] - tsStart;
+        const x = xs[i];
         const y = ys[i];
 
-        // if (now - xs[i] > 24 * 60 * 60) continue;
+        if (LIMIT_TIME_HOURS > 0 && now - x > LIMIT_TIME_HOURS * 60 * 60) {
+            skipped = true;
+            continue;
+        };
+        if (skipped) {
+            scatterData.push({x: now - LIMIT_TIME_HOURS * 60 * 60, y: ys[i - 1]});
+        }
         
         if (i != 0 && x != prev.x && x != prev.x + 1) {
             scatterData.push({x: x - 1, y: prev.y});
@@ -102,7 +108,7 @@ function rawToScatter(rawData) {
         prev.x = x;
         prev.y = y;
     }
-    scatterData.push({x: now - tsStart, y: prev.y});
+    scatterData.push({x: now, y: prev.y});
 
     return scatterData;
 }
@@ -140,4 +146,16 @@ function setChartData(navElement) {
         dataChart.data.datasets[i].borderColor = chartColors[i % chartColors.length];
     }
     dataChart.update();
+}
+
+
+function ts2str(ts) {
+    const date = new Date(ts * 1000);
+    const month = '0' + (date.getMonth() + 1);
+    const day = '0' + date.getDate();
+    const hours = '0' + date.getHours();
+    const minutes = '0' + date.getMinutes();
+
+    const formattedTime = month.substr(-2) + '/' + day.substr(-2) + '\n' + hours.substr(-2) + ':' + minutes.substr(-2);
+    return formattedTime;
 }

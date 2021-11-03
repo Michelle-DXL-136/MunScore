@@ -3,6 +3,9 @@ main {
     flex-wrap: nowrap;
     height: 100vh;
     max-height: 100vh;
+}
+
+#side-nav {
     overflow-x: auto;
     overflow-y: scroll;
 }
@@ -18,4 +21,9 @@ main {
 .nav-link.active {
     color: white;
     background-color: gray !important;
+}
+
+#data-chart-container {
+    width: calc(97vw - 300px);
+    height: 98vh;
 }
