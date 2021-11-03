@@ -7,6 +7,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_socketio import SocketIO
 from flask_apscheduler import APScheduler
 from flask_caching import Cache
+from flask_cors import CORS
 
 from config import app_config
 
@@ -35,9 +36,10 @@ def create_app():
         logging.basicConfig(filename=filepath, level=logging.INFO, format=f'%(asctime)s %(levelname)s %(name)s %(threadName)s : %(message)s')
 
     # Initialize plugin instances
-    socketio.init_app(app)
+    socketio.init_app(app, cors_allowed_origins=app.config['ALLOWED_ORIGINS'])
     scheduler.init_app(app)
     cache.init_app(app)
+    CORS(app)
 
     # Import views and APIs
     with app.app_context():

@@ -22,6 +22,7 @@ class DevelopmentConfig(Config):
     SQLALCHEMY_ECHO = True
     SQLALCHEMY_TRACK_MODIFICATIONS = True
     SCHEDULER_API_ENABLED = True
+    ALLOWED_ORIGINS = [] # Disable CORS
 
 
 class ProductionConfig(Config):
@@ -33,6 +34,7 @@ class ProductionConfig(Config):
     SQLALCHEMY_ECHO = False
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SCHEDULER_API_ENABLED = False
+    ALLOWED_ORIGINS = ['http://munscore.xa.edu.pl', 'https://munscore.xa.edu.pl']
 
 
 app_config = {
